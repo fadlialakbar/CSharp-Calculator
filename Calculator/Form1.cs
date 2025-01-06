@@ -13,7 +13,7 @@ namespace Calculator
         }
 
         private void button1_Click(object sender, EventArgs e) => PerformOperation(OperationType.Add);
-        private void button2_Click(object sender, EventArgs e) => PerformOperation(OperationType.Subtract);
+        private void button2_Click_1(object sender, EventArgs e) => PerformOperation(OperationType.Subtract);
         private void button3_Click(object sender, EventArgs e) => PerformOperation(OperationType.Multiply);
         private void button4_Click(object sender, EventArgs e) => PerformOperation(OperationType.Divide);
         private void button5_Click(object sender, EventArgs e) => ClearFields();
@@ -75,6 +75,11 @@ namespace Calculator
             textBox2.Clear();
             LBLHasil.Text = "";
             calculator = null;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ClearFields();
         }
     }
 
