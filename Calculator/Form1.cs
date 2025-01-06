@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Calculator
@@ -19,59 +12,48 @@ namespace Calculator
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                double num1 = double.Parse(textBox1.Text);
-                double num2 = double.Parse(textBox2.Text);
-                calculator = new Calculator(num1, num2);
-                LBLHasil.Text = calculator.Add().ToString();
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Invalid input. Please enter valid numbers.");
-            }
-        }
+        private void button1_Click(object sender, EventArgs e) => PerformOperation(OperationType.Add);
+        private void button2_Click(object sender, EventArgs e) => PerformOperation(OperationType.Subtract);
+        private void button3_Click(object sender, EventArgs e) => PerformOperation(OperationType.Multiply);
+        private void button4_Click(object sender, EventArgs e) => PerformOperation(OperationType.Divide);
+        private void button5_Click(object sender, EventArgs e) => ClearFields();
 
-        private void button2_Click(object sender, EventArgs e)
+        private void PerformOperation(OperationType operation)
         {
             try
             {
+                // Parse inputs once to avoid redundancy
                 double num1 = double.Parse(textBox1.Text);
                 double num2 = double.Parse(textBox2.Text);
-                calculator = new Calculator(num1, num2);
-                LBLHasil.Text = calculator.Subtract().ToString();
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Invalid input. Please enter valid numbers.");
-            }
-        }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                double num1 = double.Parse(textBox1.Text);
-                double num2 = double.Parse(textBox2.Text);
-                calculator = new Calculator(num1, num2);
-                LBLHasil.Text = calculator.Multiply().ToString();
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Invalid input. Please enter valid numbers.");
-            }
-        }
+                // Initialize the calculator if it's null
+                if (calculator == null)
+                {
+                    calculator = new Calculator(num1, num2);
+                }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                double num1 = double.Parse(textBox1.Text);
-                double num2 = double.Parse(textBox2.Text);
-                calculator = new Calculator(num1, num2);
-                LBLHasil.Text = calculator.Divide().ToString();
+                // Perform the operation based on the selected button
+                double result;
+                switch (operation)
+                {
+                    case OperationType.Add:
+                        result = calculator.Add();
+                        break;
+                    case OperationType.Subtract:
+                        result = calculator.Subtract();
+                        break;
+                    case OperationType.Multiply:
+                        result = calculator.Multiply();
+                        break;
+                    case OperationType.Divide:
+                        result = calculator.Divide();
+                        break;
+                    default:
+                        throw new InvalidOperationException("Invalid operation");
+                }
+
+                // Display the result
+                LBLHasil.Text = result.ToString();
             }
             catch (FormatException)
             {
@@ -81,14 +63,18 @@ namespace Calculator
             {
                 MessageBox.Show("Division by zero is not allowed.");
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void ClearFields()
         {
             textBox1.Clear();
             textBox2.Clear();
             LBLHasil.Text = "";
-            calculator = null; 
+            calculator = null;
         }
     }
 
@@ -103,20 +89,9 @@ namespace Calculator
             this.num2 = number2;
         }
 
-        public double Add()
-        {
-            return num1 + num2;
-        }
-
-        public double Subtract()
-        {
-            return num1 - num2;
-        }
-
-        public double Multiply()
-        {
-            return num1 * num2;
-        }
+        public double Add() => num1 + num2;
+        public double Subtract() => num1 - num2;
+        public double Multiply() => num1 * num2;
 
         public double Divide()
         {
@@ -126,5 +101,14 @@ namespace Calculator
             }
             return num1 / num2;
         }
+    }
+
+    // Enum to define operation types for readability
+    public enum OperationType
+    {
+        Add,
+        Subtract,
+        Multiply,
+        Divide
     }
 }
